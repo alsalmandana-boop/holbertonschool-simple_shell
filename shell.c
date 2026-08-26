@@ -10,12 +10,13 @@
 int main(int argc, char **argv)
 {
 	char *line = NULL;
-	char *command;
-	char *args[2];
+	char *token;
+	char *args[64];
 	size_t len = 0;
 	ssize_t nread;
 	pid_t pid;
 	int status;
+	int i;
 
 	(void)argc;
 
@@ -32,13 +33,20 @@ int main(int argc, char **argv)
 		if (nread == -1)
 			break;
 
-		command = strtok(line, " \t\n");
+		i = 0;
+		token = strtok(line, " \t\n");
 
-		if (command == NULL)
+		while (token != NULL && i < 63)
+		{
+			args[i] = token;
+			i++;
+			token = strtok(NULL, " \t\n");
+		}
+
+		args[i] = NULL;
+
+		if (args[0] == NULL)
 			continue;
-
-		args[0] = command;
-		args[1] = NULL;
 
 		pid = fork();
 
@@ -55,10 +63,8 @@ int main(int argc, char **argv)
 			perror(argv[0]);
 			_exit(EXIT_FAILURE);
 		}
-		else
-		{
-			wait(&status);
-		}
+
+		wait(&status);
 	}
 
 	free(line);
