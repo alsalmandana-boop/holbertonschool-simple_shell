@@ -45,7 +45,7 @@ int exec(char *args[64], char **argv)
 		}
 		else
 		{
-			wait(NULL);
+			wait(&status);
 			if (WIFEXITED(status))
 				status = WEXITSTATUS(status);
 		}

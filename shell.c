@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 	char *args[64];
 	size_t len = 0;
 	ssize_t nread;
-	int i;
+	int i, status = 0;
 
 	(void)argc;
 
@@ -45,9 +45,9 @@ int main(int argc, char **argv)
 
 		if (args[0] == NULL)
 			continue;
-		exec(args, argv);
+		status = exec(args, argv);
 	}
 
 	free(line);
-	return (0);
+	return (status);
 }
