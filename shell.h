@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void exec(char *args[64], char **argv, char *line);
+void exec(char *args[64], char **argv);
 
 
 /* Environment variables */
