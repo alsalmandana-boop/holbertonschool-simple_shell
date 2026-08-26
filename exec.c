@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <stdio.h>
 
 /**
  * exec - Entry point
@@ -13,13 +14,17 @@ void exec(char *args[64], char **argv)
 	if (args[0][0] == '/' || args[0][0] == '.')
 	{
 		path = malloc(strlen(args[0]) + 1);
-		if (path != NULL)
-			strcpy(path, args[0]);
+		if (path == NULL)
+		{
+			perror(argv[0]);
+			return;
+		}
+		strcpy(path, args[0]);
 	}
 	else
 		path = search_path(args[0]);
 
-	if (path != NULL && access(path, X_OK) == 0)
+	if (access(path, X_OK) == 0)
 	{
 		pid = fork();
 		if (pid == -1)
