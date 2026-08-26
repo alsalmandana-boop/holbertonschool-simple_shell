@@ -1,13 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-extern char **environ;
+#include "shell.h"
 
 /**
- * main - Simple shell command interpreter
+ * main - Simple UNIX command interpreter
  * @argc: Number of arguments
  * @argv: Argument vector
  *
@@ -16,55 +10,57 @@ extern char **environ;
 int main(int argc, char **argv)
 {
 	char *line = NULL;
+	char *command;
+	char *args[2];
 	size_t len = 0;
 	ssize_t nread;
 	pid_t pid;
 	int status;
-	char *args[2];
 
 	(void)argc;
 
-while (1)
-{
-	if (isatty(STDIN_FILENO))
+	while (1)
 	{
-		printf("#cisfun$ ");
-		fflush(stdout);
+		if (isatty(STDIN_FILENO))
+		{
+			printf("#cisfun$ ");
+			fflush(stdout);
+		}
+
+		nread = getline(&line, &len, stdin);
+
+		if (nread == -1)
+			break;
+
+		command = strtok(line, " \t\n");
+
+		if (command == NULL)
+			continue;
+
+		args[0] = command;
+		args[1] = NULL;
+
+		pid = fork();
+
+		if (pid == -1)
+		{
+			perror("fork");
+			free(line);
+			exit(EXIT_FAILURE);
+		}
+
+		if (pid == 0)
+		{
+			execve(args[0], args, environ);
+			perror(argv[0]);
+			_exit(EXIT_FAILURE);
+		}
+		else
+		{
+			wait(&status);
+		}
 	}
 
-	nread = getline(&line, &len, stdin);
-
-	if (nread == -1)
-		break;
-
-	if (nread > 0 && line[nread - 1] == '\n')
-		line[nread - 1] = '\0';
-
-	if (line[0] == '\0')
-		continue;
-
-	args[0] = line;
-	args[1] = NULL;
-
-	pid = fork();
-
-	if (pid == -1)
-	{
-		perror("fork");
-		free(line);
-		exit(EXIT_FAILURE);
-	}
-
-	if (pid == 0)
-	{
-		execve(args[0], args, environ);
-		perror(argv[0]);
-		exit(EXIT_FAILURE);
-	}
-
-	wait(&status);
-}
-
-free(line);
-return (0);
+	free(line);
+	return (0);
 }
