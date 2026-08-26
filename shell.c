@@ -47,7 +47,6 @@ int main(int argc, char **argv)
 		if (args[0] == NULL)
 			continue;
 		exec(args, argv);
-		wait(&status);
 	}
 
 	free(line);

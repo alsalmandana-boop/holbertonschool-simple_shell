@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 /**
@@ -16,7 +17,7 @@ void exec(char *args[64], char **argv)
 	int path_len;
 	char *path;
 
-	if (args[0][0] == '/')
+	if (args[0][0] == '/' || args[0][0] == '.')
 	{
 		path_len = strlen(args[0]) + 1;
 		path = malloc(path_len);
@@ -50,6 +51,10 @@ void exec(char *args[64], char **argv)
 			perror(argv[0]);
 			free(path);
 			_exit(EXIT_FAILURE);
+		}
+		else
+		{
+			wait(NULL);
 		}
 
 	}
