@@ -14,7 +14,6 @@ int main(int argc, char **argv)
 	char *args[64];
 	size_t len = 0;
 	ssize_t nread;
-	pid_t pid;
 	int status;
 	int i;
 

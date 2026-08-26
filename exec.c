@@ -37,6 +37,7 @@ void exec(char *args[64], char **argv, char *line)
 
 		execve(path, args, environ);
 		perror(argv[0]);
+		free(path);
 		_exit(EXIT_FAILURE);
 	}
 	free(path);
