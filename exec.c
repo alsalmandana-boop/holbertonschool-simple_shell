@@ -6,10 +6,11 @@
  * @args: array of argument typed by the user
  * @argv: array of arguments passed to the shell
  */
-void exec(char *args[64], char **argv)
+int exec(char *args[64], char **argv)
 {
 	pid_t pid;
 	char *path = NULL;
+	int status = 0;
 
 	if (args[0][0] == '/' || args[0][0] == '.')
 	{
@@ -23,7 +24,7 @@ void exec(char *args[64], char **argv)
 	if (path == NULL)
 	{
 		fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
-		return;  
+		return (127);  
 	}
 	if (access(path, X_OK) == 0)
 	{
@@ -32,7 +33,7 @@ void exec(char *args[64], char **argv)
 		{
 			free(path);
 			perror("fork");
-			return;
+			return (1);
 		}
 		else if (pid == 0)
 		{
@@ -40,16 +41,22 @@ void exec(char *args[64], char **argv)
 			execve(path, args, environ);
 			perror(argv[0]);
 			free(path);
-			_exit(EXIT_FAILURE);
+			_exit(127);
 		}
 		else
 		{
 			wait(NULL);
+			if (WIFEXITED(status))
+				status = WEXITSTATUS(status);
 		}
 
 	}
 	else
+	{
 		perror(argv[0]);
+		status = 126;
+	}
 	free(path);
+	return (status);
 }
 
