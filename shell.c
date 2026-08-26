@@ -24,50 +24,46 @@ int main(int argc, char **argv)
 
 	(void)argc;
 
-	while (1)
+while (1)
+{
+	if (isatty(STDIN_FILENO))
 	{
-		if (isatty(STDIN_FILENO))
-		{
-			printf("#cisfun$ ");
-			fflush(stdout);
-		}
-
-		nread = getline(&line, &len, stdin);
-
-		if (nread == -1)
-		{
-			free(line);
-			break;
-		}
-
-		if (nread > 0 && line[nread - 1] == '\n')
-			line[nread - 1] = '\0';
-
-		if (line[0] == '\0')
-			continue;
-
-		args[0] = line;
-		args[1] = NULL;
-
-		pid = fork();
-
-		if (pid == -1)
-		{
-			perror("fork");
-			free(line);
-			exit(EXIT_FAILURE);
-		}
-
-		if (pid == 0)
-		{
-			execve(args[0], args, environ);
-			perror(argv[0]);
-			exit(EXIT_FAILURE);
-		}
-
-		wait(&status);
+		printf("#cisfun$ ");
+		fflush(stdout);
 	}
 
-	free(line);
-	return (0);
+	nread = getline(&line, &len, stdin);
+
+	if (nread == -1)
+		break;
+
+	if (nread > 0 && line[nread - 1] == '\n')
+		line[nread - 1] = '\0';
+
+	if (line[0] == '\0')
+		continue;
+
+	args[0] = line;
+	args[1] = NULL;
+
+	pid = fork();
+
+	if (pid == -1)
+	{
+		perror("fork");
+		free(line);
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid == 0)
+	{
+		execve(args[0], args, environ);
+		perror(argv[0]);
+		exit(EXIT_FAILURE);
+	}
+
+	wait(&status);
 }
+
+free(line);
+return (0);
