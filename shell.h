@@ -9,7 +9,8 @@
 #include <sys/wait.h>
 
 void exec(char *args[64], char **argv);
-
+char *_getenv(const char *name);
+char *search_path(char *command);
 
 /* Environment variables */
 extern char **environ;
