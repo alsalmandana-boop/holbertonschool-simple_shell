@@ -47,23 +47,7 @@ int main(int argc, char **argv)
 
 		if (args[0] == NULL)
 			continue;
-
-		pid = fork();
-
-		if (pid == -1)
-		{
-			perror("fork");
-			free(line);
-			exit(EXIT_FAILURE);
-		}
-
-		if (pid == 0)
-		{
-			execve(args[0], args, environ);
-			perror(argv[0]);
-			_exit(EXIT_FAILURE);
-		}
-
+		exec(args, argv, line);
 		wait(&status);
 	}
 
