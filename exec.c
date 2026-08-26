@@ -14,16 +14,17 @@ void exec(char *args[64], char **argv)
 	if (args[0][0] == '/' || args[0][0] == '.')
 	{
 		path = malloc(strlen(args[0]) + 1);
-		if (path == NULL)
-		{
-			fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
-			return;
-		}
-		strcpy(path, args[0]);
+		if (path != NULL)
+			strcpy(path, args[0]);
 	}
 	else
 		path = search_path(args[0]);
 
+	if (path == NULL)
+	{
+		fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
+		return;  
+	}
 	if (access(path, X_OK) == 0)
 	{
 		pid = fork();
