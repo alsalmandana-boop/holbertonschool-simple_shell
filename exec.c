@@ -16,7 +16,7 @@ void exec(char *args[64], char **argv)
 		path = malloc(strlen(args[0]) + 1);
 		if (path == NULL)
 		{
-			perror(argv[0]);
+			fprintf(stderr, "%s: 1: %s: not found\n", argv[0], args[0]);
 			return;
 		}
 		strcpy(path, args[0]);
