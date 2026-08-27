@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <string.h>
 
 /**
  * main - Simple UNIX command interpreter
@@ -45,6 +46,11 @@ int main(int argc, char **argv)
 
 		if (args[0] == NULL)
 			continue;
+		if (strcmp(args[0], "exit") == 0)
+		{
+			free(line);
+			return (status);
+		}
 		status = exec(args, argv);
 	}
 
