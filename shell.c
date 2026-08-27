@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <stdio.h>
 #include <string.h>
 
 /**
@@ -50,6 +51,17 @@ int main(int argc, char **argv)
 		{
 			free(line);
 			return (status);
+		}
+
+		if (strcmp(args[0], "env") == 0)
+		{
+			i = 0;
+			while (environ[i] != NULL)
+			{
+				printf("%s\n", environ[i]);
+				i++;
+			}
+			continue;
 		}
 		status = exec(args, argv);
 	}
