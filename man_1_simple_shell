@@ -1,0 +1,33 @@
+.TH "Holberton " "SIMPLE SHELL" 2026-08-30 GNU
+.SH NAME
+Holberton Simple Shell
+.SH SYNOPSIS
+.B ./hsh
+.SH DESCRIPTION
+.B hsh
+is a simple command ine interpreter that reads and executes commands from standard input. it displays the prompt 
+.B #cisfu$
+and waits for the user to type a command, after that it reads commands piped through standard input without displaying the prompt.
+.SH COMMAND EXECUTION
+When a command is entered, 
+.B hsh
+reads the line using 
+.B getline 
+and tokenizes it using spaces, tabs, and newlines as delimiters. 
+If the command begins with a slash (/) or a dot (.), it treats the command as an absolute or relative path. If not, it searches the directories listed in the
+.B PATH
+environment variable to find the executable. It then uses the 
+.B fork
+and 
+.B execve
+system calls to execute the command in a child process, suspending the parent process until the child terminates.
+.SH BUILTIN COMMANDS
+The following builtin commands are handled directly by the shell:
+.TP
+.B exit
+Exits the shell immediately.
+.TP
+.B env
+Prints all current environment variables to standard output.
+.SH AUTHORS
+Written by mohammed Alzoman and Dana Alsalman.
